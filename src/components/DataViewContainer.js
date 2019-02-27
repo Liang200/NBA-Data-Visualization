@@ -2,9 +2,10 @@ import React from 'react';
 import {ShotChart} from "./ShotChart"
 
 import {
-    Radio, Switch
+    Row , Col , Radio, Switch
 } from 'antd';
 import {CountSlider} from "./CountSlider"
+import _ from  'lodash'
 
 const RadioGroup = Radio.Group;
 
@@ -45,24 +46,38 @@ export  class DataViewContainer extends React.Component {
     render() {
         const { inputValue } = this.state;
         return (
-            <div style = {{ flex : 1}}>
+            <div className= "data-view">
                 <ShotChart
                     playerId = {this.props.playerId}
                     minCount={this.state.minCount}
                     displayToolTips={this.state.displayToolTips}
                     chartType= {this.state.chartType}/>
-                <CountSlider onMinCountChange = {this.onMinCountChange}/>
-                <RadioGroup value={this.state.chartType} onChange={this.onChartTypeChange}>
-                    <Radio value="hexbin">Hexbin</Radio>
-                    <Radio value ="scatter">Scatter</Radio>
-                </RadioGroup>
+                <Row>
+                    <Col span="24" offset = "4">
+                        <CountSlider onMinCountChange = {_.debounce(this.onMinCountChange , 500)}/>
+                    </Col>
+                </Row>
 
-                <Switch
-                    onChange={this.onDisplayToolTipsChange}
-                    checkedChildren="On"
-                    unCheckedChildren="Off"
-                    defaultChecked
-                />
+                <Row>
+                    <Col span="9" offset = "6">
+                        <RadioGroup value={this.state.chartType} onChange={this.onChartTypeChange}>
+                            <Radio value="hexbin">Hexbin</Radio>
+                            <Radio value ="scatter">Scatter</Radio>
+                        </RadioGroup>
+                    </Col>
+                    <Col span="3" >
+                        <Switch
+                            onChange={this.onDisplayToolTipsChange}
+                            checkedChildren="On"
+                            unCheckedChildren="Off"
+                            defaultChecked
+                        />
+                    </Col>
+                </Row>
+
+
+
+
             </div>
         );
     }
