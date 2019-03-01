@@ -6,12 +6,15 @@ import {
 
 export class CountSlider extends React.Component  {
     state = {
-        inputValue : 2
+        inputValue : this.props.value
     }
 
     onChange = (value) => {
+        let cleanValue = Number.parseInt(value , 10);
+        cleanValue = isNaN(cleanValue) ? this.state.inputValue : cleanValue;
+
         this.setState({
-            inputValue: value
+            inputValue: cleanValue
         });
         this.props.onMinCountChange(value)
     }

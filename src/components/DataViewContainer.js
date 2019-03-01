@@ -41,24 +41,44 @@ export  class DataViewContainer extends React.Component {
         this.setState({
             chartType : e.target.value
         });
-
     }
+    debounce = (func, timeout) => {
+        var timer;
+        return (...args) => {
+            if (timer) {
+                window.clearTimeout(timer);
+            }
+            timer = window.setTimeout(() => {
+                console.log('debounce');
+                func.apply(null, args);
+            }, timeout);
+        }
+    }
+
     render() {
         const { inputValue } = this.state;
         return (
             <div className= "data-view">
+                {
+                    this.state.chartType === "hexbin" ? (
+                        <Row className = "count">
+                            <Col span="24" offset = "4">
+                                <CountSlider onMinCountChange = {this.debounce(this.onMinCountChange , 500)} value = {this.state.minCount}/>
+                            </Col>
+                        </Row>
+                    ) : (<div className = "count"></div>)
+                }
+
                 <ShotChart
                     playerId = {this.props.playerId}
                     minCount={this.state.minCount}
                     displayToolTips={this.state.displayToolTips}
-                    chartType= {this.state.chartType}/>
-                <Row>
-                    <Col span="24" offset = "4">
-                        <CountSlider onMinCountChange = {_.debounce(this.onMinCountChange , 500)}/>
-                    </Col>
-                </Row>
+                    chartType= {this.state.chartType}
+                    className = "shot-chart"
+                />
 
-                <Row>
+
+                <Row className = "button">
                     <Col span="9" offset = "6">
                         <RadioGroup value={this.state.chartType} onChange={this.onChartTypeChange}>
                             <Radio value="hexbin">Hexbin</Radio>
